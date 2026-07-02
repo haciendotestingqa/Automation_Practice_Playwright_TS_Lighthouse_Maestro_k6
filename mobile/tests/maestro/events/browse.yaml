@@ -26,9 +26,18 @@ appId: app.frontrow.qa
 - tapOn:
     id: 'events.searchInput'
 - eraseText
-- tapOn:
-    id: "com.google.android.inputmethod.latin:id/0_resource_name_obfuscated"
-    index: 2
+- runFlow:
+    when:
+      platform: Android
+    commands:
+      - tapOn:
+          id: "com.google.android.inputmethod.latin:id/0_resource_name_obfuscated"
+          index: 2
+- runFlow:
+    when:
+      platform: iOS
+    commands:
+      - hideKeyboard
 - extendedWaitUntil:
     visible:
       id: 'events.item.evt_005'
@@ -47,7 +56,16 @@ appId: app.frontrow.qa
     id: 'eventDetail.buyButton'
 
 # Back to list
-- tapOn: "Navigate up"
+- runFlow:
+    when:
+      platform: Android
+    commands:
+      - tapOn: "Navigate up"
+- runFlow:
+    when:
+      platform: iOS
+    commands:
+      - tapOn: "Events"
 - extendedWaitUntil:
     visible:
       id: 'screen.events'

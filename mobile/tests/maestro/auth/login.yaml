@@ -13,10 +13,13 @@ appId: app.frontrow.qa
             id: 'screen.events'
           timeout: 20000
 
+- hideKeyboard
 - tapOn:
     id: 'tab.profile'
-- assertVisible:
-    id: 'screen.profile'
+- extendedWaitUntil:
+    visible:
+      id: 'screen.profile'
+    timeout: 10000
 - tapOn:
     id: 'profile.signInButton'
 

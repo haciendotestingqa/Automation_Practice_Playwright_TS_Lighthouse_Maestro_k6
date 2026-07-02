@@ -3,12 +3,23 @@ appId: app.frontrow.qa
 ---
 - tapOn:
     id: 'tab.events'
-- assertVisible:
-    id: 'screen.events'
+- extendedWaitUntil:
+    visible:
+      id: 'screen.events'
+    timeout: 10000
+- scrollUntilVisible:
+    element:
+      id: 'events.item.evt_005'
+    direction: DOWN
+    timeout: 10000
 - tapOn:
     id: 'events.item.evt_005'
-- assertVisible:
-    id: 'eventDetail.title'
+- waitForAnimationToEnd:
+    timeout: 2000
+- extendedWaitUntil:
+    visible:
+      id: 'eventDetail.title'
+    timeout: 20000
 
 - tapOn:
     id: 'eventDetail.buyButton'

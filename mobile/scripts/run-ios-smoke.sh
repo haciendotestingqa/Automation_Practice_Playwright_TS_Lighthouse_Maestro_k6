@@ -24,7 +24,8 @@ if ! xcrun simctl list devices booted | grep -q Booted; then
   exit 1
 fi
 
-if ! xcrun simctl listapps booted 2>/dev/null | grep -q app.frontrow.qa; then
+INSTALLED_APPS="$(xcrun simctl listapps booted 2>/dev/null || true)"
+if [[ "$INSTALLED_APPS" != *app.frontrow.qa* ]]; then
   echo "→ Building and installing FrontRow…"
   npx expo run:ios --no-bundler
 fi

@@ -1,0 +1,65 @@
+# iOS variant — RN Modal testIDs are invisible to XCUITest; dialog uses text selectors.
+# Demo data ships with tkt_001 owned by demo user.
+# Run standalone: maestro test mobile/tests/maestro/tickets/detail-cancel-ios.yaml
+appId: app.frontrow.qa
+tags:
+  - ios-only
+---
+- runFlow:
+    when:
+      notVisible:
+        id: 'profile.signOutButton'
+    file: ../auth/login.yaml
+
+- tapOn:
+    id: 'tab.myTickets'
+- extendedWaitUntil:
+    visible:
+      id: 'myTickets.item.tkt_001'
+    timeout: 10000
+
+- tapOn:
+    id: 'myTickets.item.tkt_001'
+- extendedWaitUntil:
+    visible:
+      id: 'screen.ticketDetail'
+    timeout: 5000
+
+- assertVisible:
+    id: 'ticketDetail.qrCode'
+- assertVisible:
+    id: 'ticketDetail.qrPayload'
+- assertVisible:
+    id: 'ticketDetail.statusPill'
+
+- scrollUntilVisible:
+    element:
+      id: 'ticketDetail.cancelButton'
+    direction: DOWN
+    timeout: 10000
+- tapOn:
+    id: 'ticketDetail.cancelButton'
+- waitForAnimationToEnd:
+    timeout: 2000
+# Modal testIDs/text are not reliably visible on iOS — tap anyway by id.
+- tapOn:
+    id: 'ticketDetail.cancelConfirmNo'
+- waitForAnimationToEnd:
+    timeout: 2000
+
+- scrollUntilVisible:
+    element:
+      id: 'ticketDetail.cancelButton'
+    direction: DOWN
+    timeout: 10000
+- tapOn:
+    id: 'ticketDetail.cancelButton'
+- waitForAnimationToEnd:
+    timeout: 2000
+- tapOn:
+    id: 'ticketDetail.cancelConfirmYes'
+- extendedWaitUntil:
+    visible: 'refund pending'
+    timeout: 10000
+- assertNotVisible:
+    id: 'ticketDetail.cancelButton'
