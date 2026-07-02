@@ -1,0 +1,26 @@
+# End-to-end: sign in, browse to an event, buy a ticket, confirm in My Tickets.
+appId: app.frontrow.qa
+---
+- tapOn:
+    id: 'tab.events'
+- assertVisible:
+    id: 'screen.events'
+- tapOn:
+    id: 'events.item.evt_005'
+- assertVisible:
+    id: 'eventDetail.title'
+
+- tapOn:
+    id: 'eventDetail.buyButton'
+- assertVisible:
+    id: 'screen.buyTicket'
+- tapOn:
+    id: 'buyTicket.payButton'
+
+- assertVisible: 'Ticket purchased'
+
+- tapOn:
+    id: 'tab.myTickets'
+- assertVisible:
+    text: "My Tickets"
+    index: 0

@@ -1,0 +1,54 @@
+# Browse the events list, search by query, open an event, return.
+appId: app.frontrow.qa
+---
+- runFlow:
+    when:
+      notVisible:
+        id: 'screen.events'
+    commands:
+      - launchApp:
+          clearState: true
+      - extendedWaitUntil:
+          visible:
+            id: 'screen.events'
+          timeout: 20000
+
+# Search filters the list
+- tapOn:
+    id: 'events.searchInput'
+- inputText: 'Aurora'
+- extendedWaitUntil:
+    visible:
+      id: 'events.item.evt_002'
+    timeout: 20000
+
+# Clear search
+- tapOn:
+    id: 'events.searchInput'
+- eraseText
+- tapOn:
+    id: "com.google.android.inputmethod.latin:id/0_resource_name_obfuscated"
+    index: 2
+- extendedWaitUntil:
+    visible:
+      id: 'events.item.evt_005'
+    timeout: 20000
+
+# Open detail
+- tapOn:
+    id: "events.item.evt_005"
+- waitForAnimationToEnd:
+    timeout: 2000
+- extendedWaitUntil:
+    visible:
+      id: 'eventDetail.title'
+    timeout: 20000
+- assertVisible:
+    id: 'eventDetail.buyButton'
+
+# Back to list
+- tapOn: "Navigate up"
+- extendedWaitUntil:
+    visible:
+      id: 'screen.events'
+    timeout: 5000

@@ -1,0 +1,37 @@
+# Sign in with the demo credentials.
+appId: app.frontrow.qa
+---
+- runFlow:
+    when:
+      notVisible:
+        id: 'screen.events'
+    commands:
+      - launchApp:
+          clearState: true
+      - extendedWaitUntil:
+          visible:
+            id: 'screen.events'
+          timeout: 20000
+
+- tapOn:
+    id: 'tab.profile'
+- assertVisible:
+    id: 'screen.profile'
+- tapOn:
+    id: 'profile.signInButton'
+
+- assertVisible:
+    id: 'screen.login'
+- tapOn:
+    id: 'login.emailInput'
+- eraseText
+- inputText: 'demo@frontrow.app'
+- tapOn:
+    id: 'login.passwordInput'
+- eraseText
+- inputText: 'demo1234'
+- tapOn:
+    id: 'login.submitButton'
+
+- assertVisible:
+    id: 'profile.signOutButton'

@@ -1,0 +1,17 @@
+{
+  "name": "prestashop-playwright-ts",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "test": "playwright test",
+    "test:lighthouse": "playwright test tests/lighthouse --workers=1",
+    "report": "playwright show-report"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.52.0",
+    "@types/node": "^22.0.0",
+    "lighthouse": "^12.6.0",
+    "playwright-lighthouse": "^4.0.0",
+    "typescript": "^5.8.0"
+  }
+}

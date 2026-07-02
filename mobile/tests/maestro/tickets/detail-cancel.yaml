@@ -1,0 +1,48 @@
+# Open a purchased ticket, view QR + status, cancel through the confirm dialog.
+#
+# tag: android-only — cancel confirm dialog testIDs do not surface on iOS Maestro.
+appId: app.frontrow.qa
+tags:
+  - android-only
+---
+# Demo data ships with tkt_001 owned by demo user.
+- tapOn:
+    id: 'myTickets.item.tkt_001'
+- extendedWaitUntil:
+    visible:
+      id: 'screen.ticketDetail'
+    timeout: 2000
+
+- assertVisible:
+    id: 'ticketDetail.qrCode'
+- assertVisible:
+    id: 'ticketDetail.qrPayload'
+- assertVisible:
+    id: 'ticketDetail.statusPill'
+
+- extendedWaitUntil:
+    visible: 'Cancel ticket'
+    timeout: 3000
+- tapOn:
+    id: "ticketDetail.cancelButton"
+- extendedWaitUntil:
+    visible:
+      id: 'ticketDetail.cancelConfirmDialog'
+    timeout: 2000
+- tapOn:
+    id: 'ticketDetail.cancelConfirmNo'
+- extendedWaitUntil:
+    notVisible:
+      id: 'ticketDetail.cancelConfirmDialog'
+    timeout: 2000
+
+- tapOn:
+    id: "ticketDetail.cancelButton"
+- tapOn:
+    id: 'ticketDetail.cancelConfirmYes'
+
+- extendedWaitUntil:
+    visible: 'refund pending'
+    timeout: 3000
+- assertNotVisible:
+    id: 'ticketDetail.cancelButton'
