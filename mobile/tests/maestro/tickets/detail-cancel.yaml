@@ -2,11 +2,18 @@
 # Demo data ships with tkt_001 owned by demo user.
 appId: app.frontrow.qa
 ---
+# signOutButton is only on Profile — check there without relaunching the app.
+- tapOn:
+    id: 'tab.profile'
+- extendedWaitUntil:
+    visible:
+      id: 'screen.profile'
+    timeout: 10000
 - runFlow:
     when:
-      notVisible:
-        id: 'profile.signOutButton'
-    file: ../auth/login.yaml
+      visible:
+        id: 'profile.signInButton'
+    file: ../auth/login-credentials.yaml
 
 - tapOn:
     id: 'tab.myTickets'

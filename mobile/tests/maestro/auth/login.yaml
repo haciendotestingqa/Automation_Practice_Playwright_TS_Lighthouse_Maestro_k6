@@ -13,28 +13,16 @@ appId: app.frontrow.qa
             id: 'screen.events'
           timeout: 20000
 
-- hideKeyboard
+- runFlow:
+    when:
+      platform: iOS
+    commands:
+      - hideKeyboard
 - tapOn:
     id: 'tab.profile'
 - extendedWaitUntil:
     visible:
       id: 'screen.profile'
     timeout: 10000
-- tapOn:
-    id: 'profile.signInButton'
-
-- assertVisible:
-    id: 'screen.login'
-- tapOn:
-    id: 'login.emailInput'
-- eraseText
-- inputText: 'demo@frontrow.app'
-- tapOn:
-    id: 'login.passwordInput'
-- eraseText
-- inputText: 'demo1234'
-- tapOn:
-    id: 'login.submitButton'
-
-- assertVisible:
-    id: 'profile.signOutButton'
+- runFlow:
+    file: login-credentials.yaml

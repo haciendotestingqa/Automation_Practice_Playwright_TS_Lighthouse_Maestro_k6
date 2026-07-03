@@ -12,6 +12,7 @@ if [[ "$PLATFORM" != "android" && "$PLATFORM" != "ios" ]]; then
 fi
 
 MOBILE_DIR="$(cd "$(dirname "$0")/.." && pwd)"
+LIB="$MOBILE_DIR/scripts/lib/android-env.sh"
 
 SMOKE_FLOWS=(
   "tests/maestro/smoke/launch.yaml"
@@ -29,12 +30,10 @@ for f in "${SMOKE_FLOWS[@]}"; do
 done
 
 if [[ "$PLATFORM" == "android" ]]; then
-  DEVICE="${DEVICE:-$(adb devices | awk 'NR==2 {print $1}')}"
-  if [[ -z "$DEVICE" ]]; then
-    echo "no Android device connected (check 'adb devices')" >&2
-    exit 1
-  fi
-  MAESTRO_ARGS=(--device "$DEVICE")
+  # shellcheck source=/dev/null
+  source "$LIB"
+  android_pick_device
+  android_maestro_args
 else
   DEVICE="${DEVICE:-$(xcrun simctl list devices booted | awk -F'[()]' '/Booted/{gsub(/^[ \t]+/, "", $2); print $2; exit}')}"
   if [[ -z "$DEVICE" ]]; then
@@ -44,24 +43,19 @@ else
   MAESTRO_ARGS=(--device "$DEVICE")
 fi
 
-echo "→ smoke suite (${#SMOKE_FLOWS[@]} flows, $PLATFORM):"
+FLOW_PATHS=()
+for flow in "${SMOKE_FLOWS[@]}"; do
+  FLOW_PATHS+=("$MOBILE_DIR/$flow")
+done
+
+echo "→ smoke suite (${#SMOKE_FLOWS[@]} flows, $PLATFORM, single session):"
 printf '    %s\n' "${SMOKE_FLOWS[@]}"
 echo
 
-FAILED=()
-for flow in "${SMOKE_FLOWS[@]}"; do
-  echo "─── $flow ───"
-  if ! maestro "${MAESTRO_ARGS[@]}" test "$MOBILE_DIR/$flow"; then
-    FAILED+=("$flow")
-  fi
-  echo
-done
-
-if [[ ${#FAILED[@]} -eq 0 ]]; then
+if maestro "${MAESTRO_ARGS[@]}" test "${FLOW_PATHS[@]}"; then
   echo "✓ smoke passed (${#SMOKE_FLOWS[@]}/${#SMOKE_FLOWS[@]})"
   exit 0
 fi
 
-echo "✗ smoke failed (${#FAILED[@]}/${#SMOKE_FLOWS[@]}):"
-printf '    %s\n' "${FAILED[@]}"
+echo "✗ smoke failed"
 exit 1
