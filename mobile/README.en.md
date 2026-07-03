@@ -15,13 +15,13 @@ mobile/tests/maestro/
 ├── events/browse.yaml
 ├── auth/login.yaml
 ├── tickets/buy.yaml
-└── tickets/detail-cancel.yaml   ← Android only
+└── tickets/detail-cancel.yaml
 ```
 
 | Platform | Command (setup + smoke) | Flows |
 |----------|-------------------------|-------|
 | Android | `./mobile/scripts/run-android-smoke.sh` | 5 |
-| iOS (Mac) | `./mobile/scripts/run-ios-smoke.sh` | 4 (`detail-cancel` skipped on iOS) |
+| iOS (Mac) | `./mobile/scripts/run-ios-smoke.sh` | 5 |
 
 If Metro and the app are already running:
 

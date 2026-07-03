@@ -13,25 +13,13 @@ fi
 
 MOBILE_DIR="$(cd "$(dirname "$0")/.." && pwd)"
 
-ALL_SMOKE_FLOWS=(
+SMOKE_FLOWS=(
   "tests/maestro/smoke/launch.yaml"
   "tests/maestro/events/browse.yaml"
   "tests/maestro/auth/login.yaml"
   "tests/maestro/tickets/buy.yaml"
   "tests/maestro/tickets/detail-cancel.yaml"
 )
-
-# detail-cancel.yaml is android-only (cancel dialog not exposed to Maestro on iOS).
-if [[ "$PLATFORM" == "android" ]]; then
-  SMOKE_FLOWS=("${ALL_SMOKE_FLOWS[@]}")
-else
-  SMOKE_FLOWS=(
-    "tests/maestro/smoke/launch.yaml"
-    "tests/maestro/events/browse.yaml"
-    "tests/maestro/auth/login.yaml"
-    "tests/maestro/tickets/buy.yaml"
-  )
-fi
 
 for f in "${SMOKE_FLOWS[@]}"; do
   if [[ ! -f "$MOBILE_DIR/$f" ]]; then
@@ -58,9 +46,6 @@ fi
 
 echo "→ smoke suite (${#SMOKE_FLOWS[@]} flows, $PLATFORM):"
 printf '    %s\n' "${SMOKE_FLOWS[@]}"
-if [[ "$PLATFORM" == "ios" ]]; then
-  echo "    (detail-cancel.yaml skipped on iOS — android-only)"
-fi
 echo
 
 FAILED=()
