@@ -1,8 +1,11 @@
 #!/usr/bin/env bash
 # Smoke suite — five critical user paths (FrontRow).
 # Usage: ./mobile/scripts/smoke.sh android|ios
+# QUIET=1 (default): one line per flow, no Maestro step output. QUIET=0 for verbose single session.
 # Requires: FrontRow app installed, Metro running, flows in mobile/tests/maestro/
 set -euo pipefail
+
+QUIET="${QUIET:-1}"
 
 PLATFORM="${1:-}"
 
@@ -41,6 +44,36 @@ else
     exit 1
   fi
   MAESTRO_ARGS=(--device "$DEVICE")
+fi
+
+run_flow() {
+  local flow="$1"
+  printf '  %-45s ' "$flow"
+  if maestro "${MAESTRO_ARGS[@]}" test "$MOBILE_DIR/$flow" >/dev/null 2>&1; then
+    echo "✓"
+    return 0
+  fi
+  echo "✗"
+  return 1
+}
+
+if [[ "$QUIET" == "1" ]]; then
+  echo "→ smoke suite (${#SMOKE_FLOWS[@]} flows, $PLATFORM):"
+  FAILED=()
+  for flow in "${SMOKE_FLOWS[@]}"; do
+    if ! run_flow "$flow"; then
+      FAILED+=("$flow")
+    fi
+  done
+
+  if [[ ${#FAILED[@]} -eq 0 ]]; then
+    echo "✓ smoke passed (${#SMOKE_FLOWS[@]}/${#SMOKE_FLOWS[@]})"
+    exit 0
+  fi
+
+  echo "✗ smoke failed (${#FAILED[@]}/${#SMOKE_FLOWS[@]}):"
+  printf '    %s\n' "${FAILED[@]}"
+  exit 1
 fi
 
 FLOW_PATHS=()
